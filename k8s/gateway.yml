@@ -1,0 +1,39 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: ws-scaling-gateway-vs
+spec:
+  hosts:
+  - "ws-scaling.dotnet-works.com"
+  gateways:
+  - istio-system/istio-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /ws
+    rewrite:
+      uri: "/"
+    route:
+    - destination:
+        port:
+          number: 8080
+        host: ws-api-service
+  - match:
+    - uri:
+        regex: /?(.*)
+    route:
+    - destination:
+        port:
+          number: 8090
+        host: client-service
+# ---
+# apiVersion: networking.istio.io/v1alpha3
+# kind: DestinationRule
+# metadata:
+#   name: ws-scaling-dr
+# spec:
+#   host: ws-api-service.ws-scaling.svc.cluster.local
+#   trafficPolicy:
+#     loadBalancer:
+#       consistentHash:
+#         httpQueryParameterName: uuid

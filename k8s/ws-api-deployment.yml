@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ws-api
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: ws-api
+  template:
+    metadata:
+      labels:
+        app: ws-api
+    spec:
+      containers:
+      - name: ws-api
+        image: localhost:5001/ws-scaling-ws-api
+        # resources:
+        #   limits:
+        #     memory: "128Mi"
+        #     cpu: "500m"
+        ports:
+        - containerPort: 8080
